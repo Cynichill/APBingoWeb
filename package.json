@@ -1,0 +1,28 @@
+{
+  "name": "apbingoweb",
+  "version": "1.0.0",
+  "description": "AP Bingo Web",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cynichill/APBingoWeb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Cynichill/APBingoWeb/issues"
+  },
+  "homepage": "https://github.com/Cynichill/APBingoWeb#readme",
+  "dependencies": {
+    "archipelago.js": "^2.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^10.0.3",
+    "typescript": "^5.9.3"
+  }
+}

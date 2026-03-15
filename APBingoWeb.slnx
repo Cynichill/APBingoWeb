@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="APBingoWeb.vcxproj" />
+  <Project Path="APBingoWeb.vcxproj" Id="310f5b46-ba73-482a-a121-262d6a848130" />
 </Solution>

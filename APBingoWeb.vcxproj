@@ -127,9 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="ap.ts" />
     <None Include="index.html" />
+    <None Include="package-lock.json" />
+    <None Include="package.json" />
     <None Include="script.js" />
     <None Include="style.css" />
+    <None Include="tsconfig.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
