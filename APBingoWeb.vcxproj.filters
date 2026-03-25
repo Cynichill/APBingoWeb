@@ -24,8 +24,12 @@
     <None Include="script.js">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="ap.ts">
-      <Filter>Source Files</Filter>
-    </None>
+    <None Include="package-lock.json" />
+    <None Include="package.json" />
+    <None Include="src\ap.ts" />
+    <None Include="tsconfig.json" />
+    <None Include="src\main.ts" />
+    <None Include="src\menu.ts" />
+    <None Include="src\board.ts" />
   </ItemGroup>
 </Project>

@@ -2,11 +2,41 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/style.css">
     <title>Archipelago Bingo</title>
 </head>
 <body>
 
-    <script type="module" src="./dist/ap.js"></script>
+    <!-- AP Login Button and Panel -->
+    <div id="sidePanel">
+
+        <button id="menuButton">
+            <img src="/icons/APLogo.png" alt="menu">
+        </button>
+
+        <div class="panel-content">
+            <label>Host</label>
+            <input type="text" id="hostInput">
+
+            <label>Port</label>
+            <input type="number" id="portInput" min="0" step="1">
+
+            <label>Slotname</label>
+            <input type="text" id="slotInput">
+
+            <button id="loginButton">Login</button>
+        </div>
+    </div>
+
+    <button id="menuButton">
+        <img src="/menu-icon.png" alt="menu">
+    </button>
+
+    <!-- Bingo Board -->
+    <div id="bingoContainer"></div>
+
+    <!-- Page Set-Up -->
+    <script type="module" src="/src/main.ts"></script>
 
 </body>
 </html>

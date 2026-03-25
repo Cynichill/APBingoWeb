@@ -1,0 +1,116 @@
+:root {
+    --bg-color: #1F1F1F;
+}
+
+body {
+    background-color: var(--bg-color);
+}
+
+/* Menu button */
+#menuButton {
+    position: absolute;
+    top: 0;
+    right: -40px;
+
+    width: 40px;
+    height: 40px;
+    background-color: #2a2a2a; 
+    color: white;
+    border: none;
+    border-radius: 0; 
+    border-left: 1px solid #444;
+    cursor: pointer;
+}
+
+#menuButton img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Side panel */
+#sidePanel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #2a2a2a;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding: 20px;
+    box-sizing: border-box; 
+}
+
+    /* Visible state */
+    #sidePanel.open {
+        transform: translateX(0);
+    }
+
+/* Layout inside panel */
+.panel-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input {
+    padding: 5px;
+    font-size: 14px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+#bingoContainer {
+    display: grid;
+    gap: 2px;
+    width: min(90vw, 90vh); /* fits screen */
+    aspect-ratio: 1 / 1; /* keeps square */
+
+    margin: 20px auto;
+}
+
+/* Headers */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: clamp(8px, 1.2vw, 16px);
+}
+
+/* Squares */
+.square {
+    background-color: var(--squareColor, #333);
+    color: var(--textColor, white);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* prevents overflow at large sizes */
+}
+
+/* Top strip */
+.square-header {
+    font-size: clamp(6px, 0.8vw, 12px);
+    border-bottom: 1px solid #555;
+    text-align: center;
+    padding: 2px;
+}
+
+/* Main content */
+.square-body {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4px;
+    font-size: clamp(7px, 1vw, 16px);
+    overflow: hidden;
+    word-break: break-word; /* breaks long words */
+    overflow-wrap: break-word; /* modern version */
+    white-space: normal;
+    line-height: 1.1;
+}

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -127,11 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ap.ts" />
     <None Include="index.html" />
     <None Include="package-lock.json" />
     <None Include="package.json" />
     <None Include="script.js" />
+    <None Include="src\ap.ts" />
+    <None Include="src\board.ts" />
+    <None Include="src\main.ts" />
+    <None Include="src\menu.ts" />
     <None Include="style.css" />
     <None Include="tsconfig.json" />
   </ItemGroup>
