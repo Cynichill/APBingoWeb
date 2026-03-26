@@ -130,7 +130,6 @@
     <None Include="index.html" />
     <None Include="package-lock.json" />
     <None Include="package.json" />
-    <None Include="script.js" />
     <None Include="src\ap.ts" />
     <None Include="src\board.ts" />
     <None Include="src\main.ts" />

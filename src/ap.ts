@@ -1,78 +1,113 @@
-import { Client } from "archipelago.js"
+import { Client } from "archipelago.js";
 
 export type BingoSlotData = {
-    requiredBingoCount: number
-    //Location description for each square
-    boardLocations: string[]
-    boardSize: number
-}
+    requiredBingoCount: number;
+    boardLocations: string[]; // Location description for each square
+    boardSize: number;
+};
 
-
+/* ==============================
+   Connect to Archipelago
+============================== */
 export async function connectToAP<T>(host: string, port: number, slot: string) {
+
     const client = new Client();
-
     const hostport = `${host}:${port}`;
-
-    const slotdata = await client.login<T>(hostport, slot, "APBingo");
-
-    console.log("Connected!", slotdata);
+    //Sign in to AP server
+    const slotdata = await client.login<BingoSlotData>(hostport, slot, "APBingo");
 
     return { client, slotdata };
 }
 
-/*
+/* ==============================
+   Check Bingos
+============================== */
+export function getChecks(
+    squares: Set<string>,
+    slotdata: BingoSlotData,
+    client: Client
+) {
+    let achievedBingos: string[] = [];
 
-// Create a new instance of the Client class.
-const client = new Client()
+    // Generate column labels (A, B, C, ...)
+    const columns: string[] = Array.from(
+        { length: slotdata.boardSize },
+        (_, i) => String.fromCharCode("A".charCodeAt(0) + i)
+    );
 
-// Setup a listener for incoming chat messages and print them to the console.
-client.messages.on("chat", (message, sender) => {
-    console.log(`${sender.alias}: ${message}`)
-})
+    // Generate row labels (1, 2, 3, ...)
+    const rows: string[] = Array.from(
+        { length: slotdata.boardSize },
+        (_, i) => String(i + 1)
+    );
 
-type BingoSlotData = {
-    requiredBingoCount: number
-    //Location description for each square
-    boardLocations: string[]
-    boardSize: number
-}
+    // Check Rows for Bingos
+    for (const row of rows) {
+        if (columns.every(col => squares.has(`${col}${row}`))) {
+            achievedBingos.push(
+                `Bingo (${columns[0]}${row}-${columns[columns.length - 1]}${row})`
+            );
+        }
+    }
 
+    // Check Columns for Bingos
+    for (const col of columns) {
+        if (rows.every(row => squares.has(`${col}${row}`))) {
+            achievedBingos.push(
+                `Bingo (${col}${rows[0]}-${col}${rows[rows.length - 1]})`
+            );
+        }
+    }
 
-const params = new URLSearchParams(window.location.search)
-const url = params.get('hostname') ?? 'archipelago.gg'
-const port = params.get('port') ?? '50257'
-const hostport = params.get('hostport') ?? `${url}:${port}`
-const name = params.get('name') ?? 'Bingo'
-const password = params.get('password') ?? ''
+    // Check top left to bottom right diagonal
+    if (
+        Array.from({ length: slotdata.boardSize }, (_, i) => `${columns[i]}${rows[i]}`).every(
+            sq => squares.has(sq)
+        )
+    ) {
+        achievedBingos.push(
+            `Bingo (${columns[0]}1-${columns[slotdata.boardSize - 1]}${rows[slotdata.boardSize - 1]})`
+        );
+    }
 
-// Connect to the Archipelago server (replace url, slot name, and game as appropriate for your scenario).
-const slotdata = await client.login<BingoSlotData>(hostport, name, "APBingo", { password: password })
+    // Check bottom left to top right diagonal
+    if (
+        Array.from({ length: slotdata.boardSize }, (_, i) => `${columns[slotdata.boardSize - 1 - i]}${rows[i]}`).every(
+            sq => squares.has(sq)
+        )
+    ) {
+        achievedBingos.push(
+            `Bingo (${columns[0]}${rows[rows.length - 1]}-${columns[columns.length - 1]}${rows[0]})`
+        );
+    }
 
-//Set Page title to name of connected slot
-document.title = name + " - Archipelago Bingo"
+    // Check for Bingo ALL
+    if (squares.size === slotdata.boardSize * slotdata.boardSize) {
+        achievedBingos.push("Bingo (ALL)");
+    }
 
-const root = document.querySelector(":root") as HTMLElement
-root.style.setProperty("--tilesize", `${100 / slotdata.boardSize}%`)
-root.style.setProperty("--textColor", slotdata.customText)
-root.style.setProperty("--hightlightColor", slotdata.customHLSquare)
-root.style.setProperty("--squareColor", slotdata.customSquare)
-root.style.setProperty("--boardColor", slotdata.customBoard)
+    // Check Goal
+    if (achievedBingos.length >= slotdata.requiredBingoCount) {
+        client.goal(); // You win!
+    }
 
-console.log(slotdata.boardSize)
+    // Get all checks for aquired bingos
+    const maxChecks = Math.ceil(
+        (slotdata.boardSize * slotdata.boardSize) / (2 * slotdata.boardSize + 3)
+    );
 
-function setReceived(item: string) {
-    console.log(item);
-}
+    achievedBingos = achievedBingos.flatMap(bingo =>
+        Array.from({ length: maxChecks }, (_, i) => `${bingo}-${i}`)
+    );
 
-client.items.received.forEach(item => setReceived(item.name))
-
-client.items.on("itemsReceived", items => items.forEach(item => setReceived(item.name)))
-
-declare global {
-    interface Window {
-        gameclient: Client
+    // Send checks
+    const pkg = client.package.findPackage(client.game);
+    if (pkg != null) {
+        for (const bingo of achievedBingos) {
+            const checkId = pkg.locationTable[bingo];
+            if (checkId !== undefined) {
+                client.check(checkId); // bingo exists, call check
+            }
+        }
     }
 }
-
-window.gameclient = client
-*/

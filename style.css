@@ -1,55 +1,22 @@
+/* ==============================
+   :root variables
+============================== */
 :root {
     --bg-color: #1F1F1F;
+    --slotname-color: #3575DB;
+}
+
+/* ==============================
+   Global Styles
+============================== */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
 body {
     background-color: var(--bg-color);
-}
-
-/* Menu button */
-#menuButton {
-    position: absolute;
-    top: 0;
-    right: -40px;
-
-    width: 40px;
-    height: 40px;
-    background-color: #2a2a2a; 
-    color: white;
-    border: none;
-    border-radius: 0; 
-    border-left: 1px solid #444;
-    cursor: pointer;
-}
-
-#menuButton img {
-    width: 24px;
-    height: 24px;
-}
-
-/* Side panel */
-#sidePanel {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    background-color: #2a2a2a;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    padding: 20px;
-    box-sizing: border-box; 
-}
-
-    /* Visible state */
-    #sidePanel.open {
-        transform: translateX(0);
-    }
-
-/* Layout inside panel */
-.panel-content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
 input {
@@ -63,43 +30,117 @@ button {
     cursor: pointer;
 }
 
+/* ==============================
+   AP Button
+============================== */
+#menuButton {
+    position: absolute;
+    top: 0;
+    right: -40px;
+    width: 40px;
+    height: 40px;
+    background-color: #2a2a2a;
+    color: white;
+    border: none;
+    border-radius: 0;
+    border-left: 1px solid #444;
+    cursor: pointer;
+}
+
+    #menuButton img {
+        width: 24px;
+        height: 24px;
+    }
+
+/* ==============================
+   Side Panel
+============================== */
+#sidePanel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #2a2a2a;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 1000; /* higher than header's 500 */
+}
+
+    #sidePanel.open {
+        transform: translateX(0);
+    }
+
+.panel-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ==============================
+   Sticky Header
+============================== */
+#stickyHeader {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background-color: #191919; /* slightly darker */
+    z-index: 500; /* behind side panel button */
+    padding: 15px 20px;
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+    #stickyHeader input[type="text"] {
+        width: 100%;
+        max-width: 400px;
+        padding: 10px 14px;
+        font-size: 16px;
+    }
+
+/* ==============================
+   Bingo Container
+============================== */
+#app {
+    padding-top: 10px; /* optional for spacing */
+}
+
 #bingoContainer {
     display: grid;
-    gap: 2px;
-    width: min(90vw, 90vh); /* fits screen */
-    aspect-ratio: 1 / 1; /* keeps square */
-
-    margin: 20px auto;
+    gap: 5px;
+    width: 100vw; /* full viewport width */
+    height: 100vh; /* full viewport height */
+    margin-left: 0%; /* shifts container 5% to the left */
+    margin-top: -1.8%; /* shifts container 5% to the left */
+    padding: 0;
 }
 
-/* Headers */
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: white;
-    font-size: clamp(8px, 1.2vw, 16px);
-}
-
-/* Squares */
+/* ==============================
+   Bingo Squares
+============================== */
 .square {
     background-color: var(--squareColor, #333);
     color: var(--textColor, white);
     display: flex;
     flex-direction: column;
     overflow: hidden; /* prevents overflow at large sizes */
+    border-radius: 8px; /* <-- add this */
 }
 
-/* Top strip */
 .square-header {
-    font-size: clamp(6px, 0.8vw, 12px);
-    border-bottom: 1px solid #555;
+    background-color: var(--slotname-color);
+    color: white;
+    padding: 2px 4px;
+    font-weight: bold;
     text-align: center;
-    padding: 2px;
 }
 
-/* Main content */
 .square-body {
     flex-grow: 1;
     display: flex;
@@ -113,4 +154,65 @@ button {
     overflow-wrap: break-word; /* modern version */
     white-space: normal;
     line-height: 1.1;
+}
+
+.square-star {
+    transition: transform 0.2s ease;
+}
+
+    .square-star.show {
+        display: block;
+        transform: scale(1.2);
+    }
+
+
+/* ==============================
+   Headers inside squares
+============================== */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: clamp(8px, 1.2vw, 16px);
+}
+
+
+/* ==============================
+   Player Search
+============================== */
+#playerSearch {
+    position: absolute;
+    top: 10px;
+    right: 20px; /* distance from the right edge */
+    padding: 4px 6px;
+}
+
+/* ==============================
+   Copy Link Button
+============================== */
+#copyLinkButton {
+    display: none; /* hidden by default */
+    margin-top: 10px;
+    padding: 6px 12px; /* smaller padding */
+    font-size: 14px; /* slightly smaller text */
+    width: 120px; /* fixed width */
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    background-color: #f8f8f8; /* slightly lighter than panel */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    #copyLinkButton:hover {
+        background-color: #e0e0e0;
+    }
+
+/* ==============================
+   Utility Classes
+============================== */
+.hidden {
+    display: none;
+    margin-top: 10px;
 }

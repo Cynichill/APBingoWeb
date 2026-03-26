@@ -21,9 +21,6 @@
     <None Include="style.css">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="script.js">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="package-lock.json" />
     <None Include="package.json" />
     <None Include="src\ap.ts" />
