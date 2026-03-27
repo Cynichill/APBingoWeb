@@ -1,9 +1,20 @@
 import { Client } from "archipelago.js";
 
+export type HintData = {
+    itemName: string;
+    name: string;
+    id: number;
+    player: number;
+};
+
 export type BingoSlotData = {
     requiredBingoCount: number;
     boardLocations: string[]; // Location description for each square
     boardSize: number;
+    fogOfWar: boolean;
+    startSquare: string;
+    autoHints: boolean;
+    hintData: HintData[];
 };
 
 /* ==============================
@@ -15,7 +26,6 @@ export async function connectToAP<T>(host: string, port: number, slot: string) {
     const hostport = `${host}:${port}`;
     //Sign in to AP server
     const slotdata = await client.login<BingoSlotData>(hostport, slot, "APBingo");
-
     return { client, slotdata };
 }
 
