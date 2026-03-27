@@ -1,6 +1,10 @@
 import { setupMenu } from "./menu";
 import { connectToAP, getChecks, type BingoSlotData } from "./ap";
 import { createBoard } from "./board";
+import APLogo from './assets/icons/APLogo.png';
+
+const menuButtonImg = document.querySelector('#menuButton img') as HTMLImageElement;
+menuButtonImg.src = APLogo;
 
 // Styling
 const COLORS = {

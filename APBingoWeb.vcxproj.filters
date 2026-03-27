@@ -28,5 +28,6 @@
     <None Include="src\main.ts" />
     <None Include="src\menu.ts" />
     <None Include="src\board.ts" />
+    <None Include="src\vite-env.d.ts" />
   </ItemGroup>
 </Project>
