@@ -78,6 +78,20 @@ button {
     gap: 10px;
 }
 
+/* Style all labels inside form-group */
+.form-group label {
+    font-weight: bold; /* Makes the text bold */
+    font-size: 18px; /* Adjust the font size */
+    color: #FFFFFF; /* Text color */
+    margin-bottom: 5px; /* Space below the label */
+    display: block; /* Make it appear on its own line */
+}
+
+    /* Optional: Add hover effect */
+    .form-group label:hover {
+        color: #007BFF; /* Change color on hover */
+    }
+
 /* ==============================
    Sticky Header
 ============================== */

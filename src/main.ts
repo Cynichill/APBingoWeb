@@ -6,8 +6,6 @@ import APLogo from './assets/icons/APLogo.png';
 const menuButtonImg = document.querySelector('#menuButton img') as HTMLImageElement;
 menuButtonImg.src = APLogo;
 
-console.log("loaded file")
-
 // Styling
 const COLORS = {
     highlight: "#FF6F63",
