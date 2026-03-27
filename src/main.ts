@@ -65,10 +65,6 @@ function setupPlayerSearchFilter() {
     const searchInput = document.getElementById("playerSearch") as HTMLInputElement;
     if (!searchInput) return;
 
-    searchInput.style.width = "200px";
-    searchInput.style.padding = "4px 6px";
-    searchInput.style.fontSize = "12px";
-
     searchInput.addEventListener("input", () => {
         const query = searchInput.value.trim();
         const headers = document.querySelectorAll<HTMLDivElement>(".square-header");

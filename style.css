@@ -97,12 +97,6 @@ button {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-    #stickyHeader input[type="text"] {
-        width: 100%;
-        max-width: 400px;
-        padding: 10px 14px;
-        font-size: 16px;
-    }
 
 /* ==============================
    Bingo Container
@@ -185,7 +179,9 @@ button {
     position: absolute;
     top: 10px;
     right: 20px; /* distance from the right edge */
+    width: 200px;
     padding: 4px 6px;
+    font-size: 12px;
 }
 
 /* ==============================
