@@ -148,7 +148,6 @@ button {
     justify-content: center;
     text-align: center;
     padding: 4px;
-    font-size: clamp(7px, 1vw, 16px);
     overflow: hidden;
     word-break: break-word; /* breaks long words */
     overflow-wrap: break-word; /* modern version */

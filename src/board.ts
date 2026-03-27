@@ -58,7 +58,7 @@ export function createBoard(size: number, texts?: string[]) {
             body.className = "square-body";
             body.textContent = cleanText;
             body.title = cleanText;
-            body.style.fontSize = `${Math.max(7, maxSquare * 0.15)}px`;
+            body.style.fontSize = `${Math.max(7, maxSquare * 0.2)}px`;
 
             // Star element
             const star = document.createElement("div");
