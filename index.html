@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archipelago Bingo</title>
+  <script type="module" crossorigin src="/APBingoWeb/assets/index-BkzqIyuw.js"></script>
+  <link rel="stylesheet" crossorigin href="/APBingoWeb/assets/index-BVU-oWeR.css">
+</head>
+<body>
+
+    <!-- Sticky Header with Player Search -->
+    <header id="stickyHeader">
+        <input type="text" id="playerSearch" placeholder="Search player..." />
+    </header>
+
+    <!-- Side Panel: AP Login -->
+    <aside id="sidePanel">
+        <button id="menuButton">
+            <img src="/APBingoWeb/icons/APLogo.png" alt="Menu">
+        </button>
+
+        <div class="panel-content">
+            <div class="form-group">
+                <label for="hostInput">Host</label>
+                <input type="text" id="hostInput">
+            </div>
+
+            <div class="form-group">
+                <label for="portInput">Port</label>
+                <input type="number" id="portInput" min="0" step="1">
+            </div>
+
+            <div class="form-group">
+                <label for="slotInput">Slotname</label>
+                <input type="text" id="slotInput">
+            </div>
+
+            <button id="loginButton">Login</button>
+            <button id="copyLinkButton" class="hidden">Copy Link</button>
+        </div>
+    </aside>
+
+    <!-- Main App Container -->
+    <main id="app">
+        <div id="bingoContainer"></div>
+    </main>
+
+    <!-- Scripts -->
+
+</body>
+</html>
