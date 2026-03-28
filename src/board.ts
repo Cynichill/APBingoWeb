@@ -55,7 +55,7 @@ export function createBoard(
             square.dataset.originalText = cleanText;
 
             // Determine if this square should show real content
-            const isRevealed = !fog || reveal.includes(coord);
+            const isRevealed = !fog || reveal === coord;
 
             // Header (slot name)
             const top = document.createElement("div");

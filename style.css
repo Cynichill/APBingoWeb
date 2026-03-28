@@ -124,8 +124,8 @@ button {
     gap: 5px;
     width: 100vw; /* full viewport width */
     height: 100vh; /* full viewport height */
-    margin-left: 0%; /* shifts container 5% to the left */
-    margin-top: -1.8%; /* shifts container 5% to the left */
+    margin-left: 0%; 
+    margin-top: 0%; 
     padding: 0;
 }
 

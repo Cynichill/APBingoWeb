@@ -23,12 +23,9 @@ setupMenu(async (host, port, slot) => {
         // Set page title and create board
         document.title = `${slot} - Archipelago Bingo`;
 
-        console.log(slotdata)
         if (slotdata.autoHints) {
-            console.log("hello")
             //Hint starting Square
             const hint = findHint(slotdata.hintData, slotdata.startSquare);
-            console.log(hint)
             if (hint) client.HintSquare(...hint);
         }
 
