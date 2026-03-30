@@ -20,6 +20,9 @@ setupMenu(async (host, port, slot) => {
     try {
         const { client, slotdata } = await connectToAP<BingoSlotData>(host, port, slot);
 
+        // No4mqlize additional bingos
+        slotdata.additionalBingos = slotdata.additionalBingos ?? [];
+
         // Set page title and create board
         document.title = `${slot} - Archipelago Bingo`;
 

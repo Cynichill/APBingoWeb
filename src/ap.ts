@@ -16,7 +16,7 @@ export type BingoSlotData = {
     startSquare: string;
     autoHints: boolean;
     hintData: HintData[];
-    additionalBingos: string[];
+    additionalBingos?: string[];
 };
 
 /* ==============================
