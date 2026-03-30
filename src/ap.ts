@@ -15,6 +15,7 @@ export type BingoSlotData = {
     startSquare: string;
     autoHints: boolean;
     hintData: HintData[];
+    additionalBingos: string[];
 };
 
 /* ==============================
@@ -22,6 +23,7 @@ export type BingoSlotData = {
 ============================== */
 export async function connectToAP<T>(host: string, port: number, slot: string) {
 
+    sentBingos.clear();
     const client = new Client();
     const hostport = `${host}:${port}`;
     //Sign in to AP server
@@ -32,12 +34,44 @@ export async function connectToAP<T>(host: string, port: number, slot: string) {
 /* ==============================
    Check Bingos
 ============================== */
+
+const sentBingos = new Set<string>();
+
+const jingle = new Audio('src/assets/sounds/fanfare.wav');
+jingle.preload = 'auto'; // load in advance
+
+jingle.volume = 0.5;
+
+const victory = new Audio('src/assets/sounds/victory.mp3');
+victory.preload = 'auto'; // load in advance
+
+victory.volume = 0.5;
+
+// Load saved state (default = false)
+let isMuted = localStorage.getItem('bingoMuted') === 'true';
+const muteButton = document.getElementById('muteButton') as HTMLButtonElement;
+
+// Update button on load
+muteButton.textContent = isMuted ? '🔇' : '🔊';
+
+// Toggle Mute
+muteButton.addEventListener('click', () => {
+    isMuted = !isMuted;
+
+    // Save state
+    localStorage.setItem('bingoMuted', isMuted.toString());
+
+    // Update UI
+    muteButton.textContent = isMuted ? '🔇' : '🔊';
+});
+
 export function getChecks(
     squares: Set<string>,
     slotdata: BingoSlotData,
-    client: Client
-) {
+    client: Client)
+{
     let achievedBingos: string[] = [];
+    let achievedSpecialBingos: string[] = []
 
     // Generate column labels (A, B, C, ...)
     const columns: string[] = Array.from(
@@ -91,14 +125,88 @@ export function getChecks(
         );
     }
 
-    // Check for Bingo ALL
-    if (squares.size === slotdata.boardSize * slotdata.boardSize) {
-        achievedBingos.push("Bingo (ALL)");
+    // Check for Blackout
+    if (slotdata.additionalBingos.includes("Blackout")) {
+        if (squares.size === slotdata.boardSize * slotdata.boardSize) {
+            achievedSpecialBingos.push("Bingo (Blackout)");
+        }
+    }
+
+    // Check for Corners
+    if (slotdata.additionalBingos.includes("Corners")) {
+        const cornerKeys = [
+            `${columns[0]}${rows[0]}`,               // top-left
+            `${columns[slotdata.boardSize - 1]}${rows[0]}`,   // top-right
+            `${columns[0]}${rows[slotdata.boardSize - 1]}`,   // bottom-left
+            `${columns[slotdata.boardSize - 1]}${rows[slotdata.boardSize - 1]}` // bottom-right
+        ];
+
+        if (cornerKeys.every(key => squares.has(key))) {
+            achievedSpecialBingos.push("Bingo (Corners)");
+        }
+    }
+
+    // Check for Edges
+    if (slotdata.additionalBingos.includes("Pictureframe")) {
+        const edgeKeys: string[] = [];
+
+        for (const r of rows) {
+            for (const c of columns) {
+                // A square is on the edge if it's in the first/last row or first/last column
+                if (r === rows[0] || r === rows[rows.length - 1] || c === columns[0] || c === columns[columns.length - 1]) {
+                    edgeKeys.push(`${c}${r}`);
+                }
+            }
+        }
+
+        if (edgeKeys.every(key => squares.has(key))) {
+            achievedSpecialBingos.push("Bingo (Pictureframe)");
+        }
+    }
+
+    // Check for Checkerboard
+    if (slotdata.additionalBingos.includes("Checkerboard")) {
+        const checkerboardKeys: string[] = [];
+
+        for (let i = 0; i < rows.length; i++) {
+            for (let j = 0; j < columns.length; j++) {
+                // Normal checkerboard: (rowIndex + colIndex) % 2 === 0
+                if ((i + j) % 2 === 0) {
+                    checkerboardKeys.push(`${columns[j]}${rows[i]}`);
+                }
+            }
+        }
+
+        if (checkerboardKeys.every(key => squares.has(key))) {
+            achievedSpecialBingos.push("Bingo (Checkerboard)");
+        }
+    }
+
+    // Check for Reverse Checkerboard
+    if (slotdata.additionalBingos.includes("Reverse Checkerboard")) {
+        const reverseCheckerboardKeys: string[] = [];
+
+        for (let i = 0; i < rows.length; i++) {
+            for (let j = 0; j < columns.length; j++) {
+                // Reverse checkerboard: (rowIndex + colIndex) % 2 === 1
+                if ((i + j) % 2 === 1) {
+                    reverseCheckerboardKeys.push(`${columns[j]}${rows[i]}`);
+                }
+            }
+        }
+
+        if (reverseCheckerboardKeys.every(key => squares.has(key))) {
+            achievedSpecialBingos.push("Bingo (Reverse Checkerboard)");
+        }
     }
 
     // Check Goal
-    if (achievedBingos.length >= slotdata.requiredBingoCount) {
+    if ((achievedBingos.length + achievedSpecialBingos.length) >= slotdata.requiredBingoCount) {
         client.goal(); // You win!
+        if (!isMuted) {
+            victory.currentTime = 0; // reset to start
+            victory.play();
+        }
     }
 
     // Get all checks for aquired bingos
@@ -110,14 +218,28 @@ export function getChecks(
         Array.from({ length: maxChecks }, (_, i) => `${bingo}-${i}`)
     );
 
+    const merged = [...achievedBingos, ...achievedSpecialBingos];
+
+    // Filter to only new bingos that haven't been sent yet
+    const newBingos = merged.filter(bingo => !sentBingos.has(bingo));
+
+    const audio = document.getElementById('jingle');
+
     // Send checks
     const pkg = client.package.findPackage(client.game);
     if (pkg != null) {
-        for (const bingo of achievedBingos) {
+        for (const bingo of newBingos) {
             const checkId = pkg.locationTable[bingo];
             if (checkId !== undefined) {
                 client.check(checkId); // bingo exists, call check
+                if (!isMuted) {
+                    jingle.currentTime = 0; // reset to start
+                    jingle.play();
+                }
+
+                // Mark as sent so we don't send/play it again
+                sentBingos.add(bingo);
             }
         }
     }
-}
+ }

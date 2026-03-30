@@ -11,6 +11,7 @@
     <!-- Sticky Header with Player Search -->
     <header id="stickyHeader">
         <input type="text" id="playerSearch" placeholder="Search player..." />
+        <button id="muteButton" aria-label="Toggle sound">🔊</button>
     </header>
 
     <!-- Side Panel: AP Login -->
@@ -45,8 +46,13 @@
         <div id="bingoContainer"></div>
     </main>
 
+    <!-- Bingo Fanfare-->
+    <audio id="fanfare" src=".src/assets/sounds/fanfare.wav" preload="auto"></audio>
+
     <!-- Scripts -->
     <script type="module" src="./src/main.ts"></script>
+
+    <!-- Sounds from: nomiqbomi - https://freesound.org/people/nomiqbomi/sounds/578572/ and rhodesmas  - https://freesound.org/people/rhodesmas/sounds/380277/ -->
 
 </body>
 </html>
