@@ -1,5 +1,6 @@
 import { Client } from "archipelago.js";
-
+import fanfareSound from './assets/sounds/fanfare.wav';
+import victorySound from './assets/sounds/victory.mp3';
 export type HintData = {
     itemName: string;
     name: string;
@@ -37,12 +38,12 @@ export async function connectToAP<T>(host: string, port: number, slot: string) {
 
 const sentBingos = new Set<string>();
 
-const jingle = new Audio('src/assets/sounds/fanfare.wav');
+const jingle = new Audio(fanfareSound);
 jingle.preload = 'auto'; // load in advance
 
 jingle.volume = 0.5;
 
-const victory = new Audio('src/assets/sounds/victory.mp3');
+const victory = new Audio(victorySound)
 victory.preload = 'auto'; // load in advance
 
 victory.volume = 0.5;
