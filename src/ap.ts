@@ -22,13 +22,13 @@ export type BingoSlotData = {
 /* ==============================
    Connect to Archipelago
 ============================== */
-export async function connectToAP<T>(host: string, port: number, slot: string) {
+export async function connectToAP<T>(host: string, port: number, slot: string, password: string) {
 
     sentBingos.clear();
     const client = new Client();
     const hostport = `${host}:${port}`;
     //Sign in to AP server
-    const slotdata = await client.login<BingoSlotData>(hostport, slot, "APBingo");
+    const slotdata = await client.login<BingoSlotData>(hostport, slot, "APBingo", {password});
     return { client, slotdata };
 }
 

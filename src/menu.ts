@@ -1,5 +1,5 @@
 export function setupMenu(
-    onLogin: (host: string, port: number, slot: string) => void
+    onLogin: (host: string, port: number, slot: string, password: string) => void
 ) {
     // Elements
     const menuButton = document.getElementById("menuButton")!;
@@ -7,6 +7,7 @@ export function setupMenu(
     const hostInput = document.getElementById("hostInput") as HTMLInputElement;
     const portInput = document.getElementById("portInput") as HTMLInputElement;
     const slotInput = document.getElementById("slotInput") as HTMLInputElement;
+    const passInput = document.getElementById("passInput") as HTMLInputElement;
     const loginButton = document.getElementById("loginButton")!;
     const copyLinkButton = document.getElementById("copyLinkButton")!;
 
@@ -21,14 +22,16 @@ export function setupMenu(
     const savedHost = params.get("host") || localStorage.getItem("apHost") || "";
     const savedPort = params.get("port") || localStorage.getItem("apPort") || "";
     const savedSlot = params.get("slot") || localStorage.getItem("apSlot") || "";
+    const savedPass = params.get("password") || localStorage.getItem("apPass") || "";
 
     hostInput.value = savedHost;
     portInput.value = savedPort;
     slotInput.value = savedSlot;
+    passInput.value = savedPass;
 
     // Auto-login if all fields exist
     if (savedHost && savedPort && savedSlot) {
-        onLogin(savedHost, Number(savedPort), savedSlot);
+        onLogin(savedHost, Number(savedPort), savedSlot, savedPass);
         showCopyLink();
     }
 
@@ -37,6 +40,7 @@ export function setupMenu(
         const host = hostInput.value.trim();
         const port = Number(portInput.value);
         const slot = slotInput.value.trim();
+        const pass = passInput.value.trim();
 
         if (!host || !port || !slot) return;
 
@@ -48,9 +52,10 @@ export function setupMenu(
         localStorage.setItem("apHost", host);
         localStorage.setItem("apPort", String(port));
         localStorage.setItem("apSlot", slot);
+        localStorage.setItem("apPass", pass)
 
         showCopyLink();
-        onLogin(host, port, slot);
+        onLogin(host, port, slot, pass);
     };
 
     loginButton.addEventListener("click", handleLogin);

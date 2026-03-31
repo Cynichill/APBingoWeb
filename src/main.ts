@@ -16,9 +16,9 @@ const COLORS = {
 };
 
 // Menu Set-up
-setupMenu(async (host, port, slot) => {
+setupMenu(async (host, port, slot, password) => {
     try {
-        const { client, slotdata } = await connectToAP<BingoSlotData>(host, port, slot);
+        const { client, slotdata } = await connectToAP<BingoSlotData>(host, port, slot, password);
 
         // No4mqlize additional bingos
         slotdata.additionalBingos = slotdata.additionalBingos ?? [];
