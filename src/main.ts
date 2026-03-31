@@ -4,6 +4,8 @@ import { createBoard, restoreSquareText } from "./board";
 import APLogo from './assets/icons/APLogo.png';
 import { Hint } from "archipelago.js";
 
+(document.head.querySelector("link[rel=icon]") as HTMLLinkElement || document.head.appendChild(Object.assign(document.createElement("link"), { rel: "icon" })) as HTMLLinkElement).href = APLogo;
+
 const menuButtonImg = document.querySelector('#menuButton img') as HTMLImageElement;
 menuButtonImg.src = APLogo;
 
