@@ -4,16 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archipelago Bingo</title>
-  <script type="module" crossorigin src="/APBingoWeb/assets/index-EPGbXQiS.js"></script>
-  <link rel="stylesheet" crossorigin href="/APBingoWeb/assets/index-CjSzQzFR.css">
+  <script type="module" crossorigin src="/APBingoWeb/assets/index-CeOMvzbg.js"></script>
+  <link rel="stylesheet" crossorigin href="/APBingoWeb/assets/index-yr4WWHp4.css">
 </head>
 <body>
 
-    <!-- Sticky Header with Player Search -->
-    <header id="stickyHeader">
-        <input type="text" id="playerSearch" placeholder="Search player..." />
-        <button id="muteButton" aria-label="Toggle sound">🔊</button>
-    </header>
+    <div class="viewport-container">
+        <!-- Sticky Header with Player Search -->
+        <header id="stickyHeader">
+            <input type="text" id="playerSearch" placeholder="Search player..." />
+            <button id="muteButton" aria-label="Toggle sound">🔊</button>
+        </header>
+
+        <!-- Main App Container -->
+        <main id="app">
+            <div id="bingoContainer"></div>
+        </main>
+    </div>
 
     <!-- Side Panel: AP Login -->
     <aside id="sidePanel">
@@ -46,11 +53,6 @@
             <button id="copyLinkButton" class="hidden">Copy Link</button>
         </div>
     </aside>
-
-    <!-- Main App Container -->
-    <main id="app">
-        <div id="bingoContainer"></div>
-    </main>
 
     <!-- Scripts -->
 
