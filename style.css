@@ -142,16 +142,7 @@ button {
     width: 100vw;
     height: calc(100vh - 70px); /* account for header */
     overflow: auto;
-    /* Hide scrollbar (Firefox) */
-    scrollbar-width: none;
-    /* Hide scrollbar (IE/Edge) */
-    -ms-overflow-style: none;
 }
-
-    /* Hide scrollbar (Chrome, Safari) */
-    #viewport::-webkit-scrollbar {
-        display: none;
-    }
 
 #zoomLayer {
     transform-origin: top left;

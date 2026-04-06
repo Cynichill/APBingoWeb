@@ -188,11 +188,11 @@ function computeMinScale() {
 
 function applyZoom() {
     const zoomLayer = document.getElementById('zoomLayer');
-
+    
     // Scale from top-left so scroll works naturally
     zoomLayer.style.transformOrigin = '0 0';
     zoomLayer.style.transform = `scale(${scale})`;
-
+    
     // Make the wrapper scrollable based on zoomed size
     const container = document.getElementById('viewport');
     container.scrollLeft = Math.max(0, (zoomLayer.offsetWidth * scale - container.clientWidth) / 2);
