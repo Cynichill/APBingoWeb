@@ -17,6 +17,26 @@ const COLORS = {
     headerReceived: "#358F4A",
 };
 
+let scale = 1;
+let minScale = 1;
+const viewport = document.getElementById('viewport');
+
+window.addEventListener('load', computeMinScale);
+
+viewport.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+        e.preventDefault();
+
+        const delta = -e.deltaY * 0.001;
+        scale += delta;
+
+        // 👇 THIS is the important part
+        scale = Math.max(minScale, Math.min(scale, 2.5));
+
+        applyZoom();
+    }
+}, { passive: false });
+
 // Menu Set-up
 setupMenu(async (host, port, slot, password) => {
     try {
@@ -145,3 +165,28 @@ const findHint = (hintData: HintData[], itemName: string): [number, number] | un
     const h = hintData.find(x => x.itemName === itemName);
     return h ? [h.id, h.player] : undefined;
 };
+function computeMinScale() {
+    const container = document.getElementById('bingoContainer');
+    const viewport = document.getElementById('viewport');
+
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+
+    const cw = container.offsetWidth;
+    const ch = container.offsetHeight;
+
+    const scaleX = vw / cw;
+    const scaleY = vh / ch;
+
+    // Fit entire board
+    minScale = Math.min(scaleX, scaleY);
+
+    scale = minScale;
+
+    applyZoom();
+}
+
+function applyZoom() {
+    const zoomLayer = document.getElementById('zoomLayer');
+    zoomLayer.style.transform = `scale(${scale})`;
+}
