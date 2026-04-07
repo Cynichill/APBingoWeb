@@ -95,9 +95,7 @@ button {
 /* ==============================
    Sticky Header
 ============================== */
-/* ==============================
-   Sticky Header
-============================== */
+
 #stickyHeader {
     position: sticky;
     top: 0;
@@ -129,6 +127,10 @@ button {
     width: 200px;
     padding: 4px 6px;
     font-size: 12px;
+}
+
+#bingoCounter {
+    color: white;
 }
 
 /* ==============================
