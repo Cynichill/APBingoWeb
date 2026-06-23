@@ -154,7 +154,6 @@ button {
 
 #viewport {
     width: 100vw;
-    height: calc(100vh - 70px); /* account for header */
     overflow: auto;
 }
 
