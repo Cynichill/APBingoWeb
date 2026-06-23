@@ -99,9 +99,7 @@ button {
 /* ==============================
    Sticky Header
 ============================== */
-/* ==============================
-   Sticky Header
-============================== */
+
 #stickyHeader {
     position: sticky;
     top: 0;
@@ -135,6 +133,10 @@ button {
     font-size: 12px;
 }
 
+#bingoCounter {
+    color: white;
+}
+
 /* ==============================
    Bingo Container
 ============================== */
@@ -150,14 +152,19 @@ button {
     overflow-y: auto; /* to clip the content inside it */
 }
 
+#viewport {
+    width: 100vw;
+    height: calc(100vh - 70px); /* account for header */
+    overflow: auto;
+}
+
+#zoomLayer {
+    transform-origin: top left;
+}
+
 #bingoContainer {
     display: grid;
     gap: 5px;
-    width: 100vw; /* full viewport width */
-    height: 100%; /* take full height of the parent */
-    margin-left: 0%;
-    margin-top: 0%;
-    padding: 0;
 }
 
 /* ==============================

@@ -201,6 +201,8 @@ export function getChecks(
         }
     }
 
+    document.getElementById("bingoCounter").textContent = (achievedBingos.length + achievedSpecialBingos.length) + "/" + slotdata.requiredBingoCount + " Goal";
+
     // Check Goal
     if ((achievedBingos.length + achievedSpecialBingos.length) >= slotdata.requiredBingoCount) {
         client.goal(); // You win!

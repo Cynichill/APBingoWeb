@@ -76,10 +76,10 @@ export function createBoard(
             star.textContent = "★";
             star.style.display = "none"; // hidden initially
             star.style.position = "absolute";
-            star.style.top = "-2px";
-            star.style.right = "4px";
+            star.style.top = "-5%";      
+            star.style.right = "5%"; 
             star.style.color = "gold";
-            star.style.fontSize = "16px";
+            star.style.fontSize = `${Math.max(8, maxSquare * 0.25)}px`; // 25% of square size
             star.style.pointerEvents = "none";
             star.style.userSelect = "none";
 
