@@ -8,12 +8,23 @@
 </head>
 <body>
 
-    <!-- Sticky Header with Player Search -->
-    <header id="stickyHeader">
-        <span id="bingoCounter">0/0 Goal</span>
-        <input type="text" id="playerSearch" placeholder="Search player..." />
-        <button id="muteButton" aria-label="Toggle sound">🔊</button>
-    </header>
+    <div class="viewport-container">
+        <!-- Sticky Header with Player Search -->
+        <header id="stickyHeader">
+            <span id="bingoCounter">0/0 Goal</span>
+            <input type="text" id="playerSearch" placeholder="Search player..." />
+            <button id="muteButton" aria-label="Toggle sound">🔊</button>
+        </header>
+
+        <!-- Main App Container -->
+        <main id="app">
+            <div id="viewport">
+                <div id="zoomLayer">
+                    <div id="bingoContainer"></div>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <!-- Side Panel: AP Login -->
     <aside id="sidePanel">
@@ -46,15 +57,6 @@
             <button id="copyLinkButton" class="hidden">Copy Link</button>
         </div>
     </aside>
-
-    <!-- Main App Container -->
-    <main id="app">
-        <div id="viewport">
-            <div id="zoomLayer">
-                <div id="bingoContainer"></div>
-            </div>
-        </div>
-    </main>
 
     <!-- Scripts -->
     <script type="module" src="./src/main.ts"></script>

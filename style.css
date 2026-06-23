@@ -19,6 +19,10 @@ body {
     background-color: var(--bg-color);
 }
 
+* {
+    box-sizing: border-box;
+}
+
 input {
     padding: 5px;
     font-size: 14px;
@@ -136,13 +140,20 @@ button {
 /* ==============================
    Bingo Container
 ============================== */
+.viewport-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
 #app {
     padding-top: 10px; /* optional for spacing */
+    flex-grow: 1; /* to make the app take the rest of the space */
+    overflow-y: auto; /* to clip the content inside it */
 }
 
 #viewport {
     width: 100vw;
-    height: calc(100vh - 70px); /* account for header */
     overflow: auto;
 }
 
