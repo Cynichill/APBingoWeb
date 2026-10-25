@@ -92,6 +92,9 @@ setupMenu(async (host, port, slot, password) => {
             // Update board UI
             receivedSquares.forEach(setReceived);
 
+            // Refresh search highlighting to reflect received squares
+            updatePlayerSearchFilter();
+
             //Reveal squares for fog of war
             if (slotdata.fogOfWar) {
                 const squares = new Set<string>();
@@ -146,32 +149,42 @@ function setReceived(squareName: string) {
 }
 
 // Set up player search filter
+
 function setupPlayerSearchFilter() {
     const searchInput = document.getElementById("playerSearch") as HTMLInputElement;
     if (!searchInput) return;
 
     searchInput.addEventListener("input", () => {
-        const query = searchInput.value.trim();
-        const squares = document.querySelectorAll<HTMLDivElement>(".square");
+        updatePlayerSearchFilter();
+    });
+}
 
-        squares.forEach(square => {
-            const header = square.querySelector<HTMLDivElement>(".square-header");
-            if (!header) return;
+function updatePlayerSearchFilter() {
+    const searchInput = document.getElementById("playerSearch") as HTMLInputElement;
+    if (!searchInput) return;
 
-            const isMatch = query && header.textContent === query;
+    const query = searchInput.value.trim().toLowerCase();
+    const squares = document.querySelectorAll<HTMLDivElement>(".square");
 
-            // Toggle outline on the square (always)
-            square.classList.toggle("search-match", isMatch);
+    squares.forEach(square => {
+        const header = square.querySelector<HTMLDivElement>(".square-header");
+        if (!header) return;
 
-            // Only highlight the header if the square isn't already received
-            const isReceived = square.classList.contains("received");
-            header.classList.toggle("search-highlight", isMatch && !isReceived);
+        const isMatch = Boolean(
+            query && header.textContent.toLowerCase().includes(query)
+        );
 
-            // If no match and not received, restore default header style
-            if (!isMatch && !header.classList.contains("search-highlight")) {
-                header.style.backgroundColor = "";
-            }
-        });
+        // Toggle outline on the square (always)
+        square.classList.toggle("search-match", isMatch);
+
+        // Only highlight the header if the square isn't already received
+        const isReceived = square.classList.contains("received");
+        header.classList.toggle("search-highlight", isMatch && !isReceived);
+
+        // Restore default header style when no highlight is active
+        if (!isMatch || isReceived) {
+            header.style.backgroundColor = "";
+        }
     });
 }
 
@@ -306,7 +319,7 @@ function setupTextClient(client: Client) {
     // Append a message to the log
     function appendMessage(text: string, isSystem = false) {
         const p = document.createElement("p");
-        p.textContent = text;
+        p.textContent = text.replace(/,/g, "");
         if (isSystem) p.classList.add("system-message");
         log.appendChild(p);
         log.scrollTop = log.scrollHeight;
