@@ -1,6 +1,7 @@
 import { setupMenu } from "./menu";
 import { connectToAP, getChecks, type BingoSlotData, type HintData } from "./ap";
 import { createBoard, restoreSquareText } from "./board";
+import { Client } from "archipelago.js";
 import APLogo from './assets/icons/APLogo.png';
 import { Hint } from "archipelago.js";
 
@@ -9,19 +10,38 @@ import { Hint } from "archipelago.js";
 const menuButtonImg = document.querySelector('#menuButton img') as HTMLImageElement;
 menuButtonImg.src = APLogo;
 
-// Styling
-const COLORS = {
-    highlight: "#FF6F63",
-    squareReceived: "#42B35D",
-    headerDefault: "#3575DB",
-    headerReceived: "#358F4A",
-};
+// ==============================
+//   Theme System
+// ==============================
+const themeSelect = document.getElementById("themeSelect") as HTMLSelectElement;
+const savedTheme = localStorage.getItem("bingo-theme") || "";
+if (savedTheme) {
+    // Validate the saved theme still exists as an option
+    const isValid = themeSelect.querySelector<HTMLOptionElement>(`option[value="${savedTheme}"]`);
+    if (isValid) {
+        document.documentElement.dataset.theme = savedTheme;
+        themeSelect.value = savedTheme;
+    } else {
+        localStorage.removeItem("bingo-theme");
+    }
+}
+themeSelect.addEventListener("change", () => {
+    const theme = themeSelect.value;
+    if (theme) {
+        document.documentElement.dataset.theme = theme;
+        localStorage.setItem("bingo-theme", theme);
+    } else {
+        delete document.documentElement.dataset.theme;
+        localStorage.removeItem("bingo-theme");
+    }
+});
 
 let scale = 1;
 let minScale = 1;
 const viewport = document.getElementById('viewport');
 
 window.addEventListener('load', computeMinScale);
+window.addEventListener('resize', computeMinScale);
 
 viewport.addEventListener('wheel', (e) => {
     if (e.ctrlKey) {
@@ -55,6 +75,12 @@ setupMenu(async (host, port, slot, password) => {
         }
 
         createBoard(slotdata.boardSize, slotdata.boardLocations, slotdata.fogOfWar, slotdata.startSquare);
+
+        // Fit the board to the viewport now that the grid exists
+        computeMinScale();
+
+        // Set up the text client panel
+        setupTextClient(client);
 
 
         // Update board squares and run bingo checks
@@ -102,19 +128,21 @@ setupMenu(async (host, port, slot, password) => {
     }
 });
 
-// Update a single square's appearance
+// Update a single square's appearance using CSS classes
 function setReceived(squareName: string) {
 
     const squareDiv = document.querySelector<HTMLDivElement>(`.square[data-square="${squareName}"]`);
     if (!squareDiv) return;
 
-    squareDiv.style.backgroundColor = COLORS.squareReceived;
+    // Skip if already marked received
+    if (squareDiv.classList.contains("received")) return;
 
-    const header = squareDiv.querySelector<HTMLDivElement>(".square-header");
-    if (!header) return;
+    squareDiv.classList.add("received", "received-animate");
 
-    header.style.backgroundColor = COLORS.headerReceived;
-    header.dataset.defaultColor = COLORS.headerReceived;
+    // Remove the animation class after it completes so it doesn't replay
+    squareDiv.addEventListener("animationend", () => {
+        squareDiv.classList.remove("received-animate");
+    }, { once: true });
 }
 
 // Set up player search filter
@@ -124,13 +152,25 @@ function setupPlayerSearchFilter() {
 
     searchInput.addEventListener("input", () => {
         const query = searchInput.value.trim();
-        const headers = document.querySelectorAll<HTMLDivElement>(".square-header");
+        const squares = document.querySelectorAll<HTMLDivElement>(".square");
 
-        headers.forEach(header => {
-            const defaultColor = header.dataset.defaultColor ?? COLORS.headerDefault;
-            header.style.backgroundColor = query && header.textContent === query
-                ? COLORS.highlight
-                : defaultColor;
+        squares.forEach(square => {
+            const header = square.querySelector<HTMLDivElement>(".square-header");
+            if (!header) return;
+
+            const isMatch = query && header.textContent === query;
+
+            // Toggle outline on the square (always)
+            square.classList.toggle("search-match", isMatch);
+
+            // Only highlight the header if the square isn't already received
+            const isReceived = square.classList.contains("received");
+            header.classList.toggle("search-highlight", isMatch && !isReceived);
+
+            // If no match and not received, restore default header style
+            if (!isMatch && !header.classList.contains("search-highlight")) {
+                header.style.backgroundColor = "";
+            }
         });
     });
 }
@@ -175,6 +215,9 @@ function computeMinScale() {
     const cw = container.offsetWidth;
     const ch = container.offsetHeight;
 
+    // Guard: board hasn't been created yet
+    if (cw === 0 || ch === 0) return;
+
     const scaleX = vw / cw;
     const scaleY = vh / ch;
 
@@ -188,13 +231,112 @@ function computeMinScale() {
 
 function applyZoom() {
     const zoomLayer = document.getElementById('zoomLayer');
-    
-    // Scale from top-left so scroll works naturally
+    const container = document.getElementById('viewport');
+
+    // Scale from top-left
     zoomLayer.style.transformOrigin = '0 0';
     zoomLayer.style.transform = `scale(${scale})`;
-    
-    // Make the wrapper scrollable based on zoomed size
-    const container = document.getElementById('viewport');
-    container.scrollLeft = Math.max(0, (zoomLayer.offsetWidth * scale - container.clientWidth) / 2);
-    container.scrollTop = Math.max(0, (zoomLayer.offsetHeight * scale - container.clientHeight) / 2);
+
+    // Clear any prior overrides so we read intrinsic content size
+    zoomLayer.style.width  = '';
+    zoomLayer.style.height = '';
+    zoomLayer.style.marginRight  = '';
+    zoomLayer.style.marginBottom = '';
+    zoomLayer.style.marginLeft   = '';
+    zoomLayer.style.marginTop    = '';
+
+    const intrinsicW = zoomLayer.scrollWidth;
+    const intrinsicH = zoomLayer.scrollHeight;
+
+    // The visual size after transform
+    const scaledW = intrinsicW * scale;
+    const scaledH = intrinsicH * scale;
+
+    // CSS transform doesn't change layout dimensions — the browser still sees
+    // the full intrinsic size for overflow/scrollbar calculations. Use negative
+    // margins to shrink the layout box to match the visual (scaled) size.
+    zoomLayer.style.marginRight  = `${-(intrinsicW - scaledW)}px`;
+    zoomLayer.style.marginBottom = `${-(intrinsicH - scaledH)}px`;
+
+    // Center the board when it's smaller than the viewport
+    const vw = container.clientWidth;
+    const vh = container.clientHeight;
+
+    if (scaledW < vw) {
+        zoomLayer.style.marginLeft = `${(vw - scaledW) / 2}px`;
+    }
+
+    if (scaledH < vh) {
+        zoomLayer.style.marginTop = `${(vh - scaledH) / 2}px`;
+    }
+
+    // Scroll to center when zoomed in past viewport
+    container.scrollLeft = Math.max(0, (scaledW - vw) / 2);
+    container.scrollTop  = Math.max(0, (scaledH - vh) / 2);
+}
+
+
+// ==============================
+//   Collapsible Panel Sections
+// ==============================
+document.querySelectorAll<HTMLButtonElement>(".panel-section-header").forEach(header => {
+    header.addEventListener("click", () => {
+        const section = header.closest(".panel-section")!;
+        const isCollapsed = section.classList.toggle("collapsed");
+        header.setAttribute("aria-expanded", String(!isCollapsed));
+    });
+});
+
+// ==============================
+//   Text Client
+// ==============================
+function setupTextClient(client: Client) {
+    const loginSection = document.getElementById("loginSection")!;
+    const textClientSection = document.getElementById("textClientSection")!;
+    const log = document.getElementById("textClientLog")!;
+    const input = document.getElementById("textClientMessage") as HTMLInputElement;
+    const sendBtn = document.getElementById("textClientSend")!;
+
+    // Collapse login, expand text client on successful connection
+    loginSection.classList.add("collapsed");
+    loginSection.querySelector(".panel-section-header")!.setAttribute("aria-expanded", "false");
+    textClientSection.classList.remove("collapsed");
+    textClientSection.querySelector(".panel-section-header")!.setAttribute("aria-expanded", "true");
+
+    // Append a message to the log
+    function appendMessage(text: string, isSystem = false) {
+        const p = document.createElement("p");
+        p.textContent = text;
+        if (isSystem) p.classList.add("system-message");
+        log.appendChild(p);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    // Populate with any existing messages from the log
+    for (const entry of client.messages.log) {
+        appendMessage(entry.text);
+    }
+
+    // Listen for all incoming messages
+    client.messages.on("message", (text) => {
+        appendMessage(text);
+    });
+
+    // Send message on button click
+    const sendMessage = () => {
+        const text = input.value.trim();
+        if (!text) return;
+        client.messages.say(text);
+        input.value = "";
+    };
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    // Send message on Enter key
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
 }

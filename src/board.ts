@@ -12,15 +12,9 @@ export function createBoard(
     // Include headers (extra row/col for labels)
     const total = size + 1;
 
-    // Determine maximum square size that fits viewport
-    const viewportWidth = window.innerWidth * 0.95; // leave 5% padding
-    const viewportHeight = window.innerHeight * 0.95;
-    const maxSquare = Math.floor(Math.min(viewportWidth, viewportHeight) / total);
-
-    // Set grid layout
-    container.style.display = "grid";
-    container.style.gridTemplateColumns = `auto repeat(${size}, 1fr)`;
-    container.style.gridTemplateRows = `repeat(${size + 1}, 1fr)`;
+    // Set grid layout with fixed cell sizes for readability
+    container.style.gridTemplateColumns = `30px repeat(${size}, 140px)`;
+    container.style.gridTemplateRows = `25px repeat(${size}, 90px)`;
 
     container.appendChild(document.createElement("div")); // top-left corner
 
@@ -43,7 +37,6 @@ export function createBoard(
         for (let col = 0; col < size; col++) {
             const square = document.createElement("div");
             square.className = "square";
-            square.style.position = "relative";
 
             const coord = `${letters[col]}${row + 1}`;
             square.dataset.square = coord;
@@ -61,36 +54,26 @@ export function createBoard(
             const top = document.createElement("div");
             top.className = "square-header";
             top.textContent = isRevealed ? (slotName ?? "") : "?????";
-            top.style.fontSize = `${Math.max(8, maxSquare * 0.2)}px`;
 
             // Body (main content)
             const body = document.createElement("div");
             body.className = "square-body";
             body.textContent = isRevealed ? (cleanText ?? "") : "?????";
             body.title = isRevealed ? (cleanText ?? "") : "?????";
-            body.style.fontSize = `${Math.max(7, maxSquare * 0.2)}px`;
 
-            // Star element
-            const star = document.createElement("div");
-            star.className = "square-star";
-            star.textContent = "★";
-            star.style.display = "none"; // hidden initially
-            star.style.position = "absolute";
-            star.style.top = "-5%";      
-            star.style.right = "5%"; 
-            star.style.color = "gold";
-            star.style.fontSize = `${Math.max(8, maxSquare * 0.25)}px`; // 25% of square size
-            star.style.pointerEvents = "none";
-            star.style.userSelect = "none";
+            // Apply fog styling for unrevealed squares
+            if (!isRevealed) {
+                square.classList.add("fogged");
+                body.classList.add("fog");
+            }
 
             // Append elements
-            square.appendChild(star);
             square.appendChild(top);
             square.appendChild(body);
 
-            // Toggle star on click
+            // Toggle starred state on click — CSS-driven border/glow
             square.addEventListener("click", () => {
-                star.style.display = star.style.display === "none" ? "block" : "none";
+                square.classList.toggle("starred");
             });
 
             container.appendChild(square);
@@ -132,7 +115,9 @@ export function updateSquareText(
         if (body) {
             body.textContent = newBody;
             body.title = newBody; // update tooltip too
+            body.classList.remove("fog"); // revealed content is no longer foggy
         }
+        square.classList.remove("fogged");
     }
 }
 
@@ -152,5 +137,7 @@ export function restoreSquareText(coord: string) {
     if (body) {
         body.textContent = originalText;
         body.title = originalText;
+        body.classList.remove("fog"); // restored content is revealed
     }
+    square.classList.remove("fogged");
 }

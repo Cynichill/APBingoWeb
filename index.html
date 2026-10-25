@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <title>Archipelago Bingo</title>
 </head>
@@ -15,35 +18,78 @@
         <button id="muteButton" aria-label="Toggle sound">🔊</button>
     </header>
 
-    <!-- Side Panel: AP Login -->
+    <!-- Side Panel: AP Login + Text Client -->
     <aside id="sidePanel">
         <button id="menuButton">
             <img alt="Menu">
         </button>
 
         <div class="panel-content">
-            <div class="form-group">
-                <label for="hostInput">Host</label>
-                <input type="text" id="hostInput">
+            <!-- Collapsible: Connection -->
+            <div class="panel-section" id="loginSection">
+                <button class="panel-section-header" aria-expanded="true">
+                    <span>Connection</span>
+                    <span class="panel-chevron">▼</span>
+                </button>
+                <div class="panel-section-body">
+                    <div class="form-group">
+                        <label for="hostInput">Host</label>
+                        <input type="text" id="hostInput">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="portInput">Port</label>
+                        <input type="number" id="portInput" min="0" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="slotInput">Slotname</label>
+                        <input type="text" id="slotInput">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passwordInput">Password</label>
+                        <input type="password" id="passInput">
+                    </div>
+
+                    <button id="loginButton">Login</button>
+                    <button id="copyLinkButton" class="hidden">Copy Link</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="portInput">Port</label>
-                <input type="number" id="portInput" min="0" step="1">
+            <!-- Collapsible: Settings -->
+            <div class="panel-section collapsed" id="settingsSection">
+                <button class="panel-section-header" aria-expanded="false">
+                    <span>Settings</span>
+                    <span class="panel-chevron">▼</span>
+                </button>
+                <div class="panel-section-body">
+                    <div class="form-group">
+                        <label for="themeSelect">Theme</label>
+                        <select id="themeSelect">
+                            <option value="">Default</option>
+                            <option value="amethyst">Amethyst</option>
+                            <option value="ember">Ember</option>
+                            <option value="seafoam">Seafoam</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="slotInput">Slotname</label>
-                <input type="text" id="slotInput">
+            <!-- Collapsible: Text Client -->
+            <div class="panel-section collapsed" id="textClientSection">
+                <button class="panel-section-header" aria-expanded="false">
+                    <span>Text Client</span>
+                    <span class="panel-chevron">▼</span>
+                </button>
+                <div class="panel-section-body">
+                    <div id="textClientLog"></div>
+                    <div id="textClientInput">
+                        <input type="text" id="textClientMessage" placeholder="Type a message..." />
+                        <button id="textClientSend">Send</button>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="passwordInput">Password</label>
-                <input type="password" id="passInput">
-            </div>
-
-            <button id="loginButton">Login</button>
-            <button id="copyLinkButton" class="hidden">Copy Link</button>
         </div>
     </aside>
 
