@@ -97,41 +97,8 @@ export function sendNextMinigameReward() {
     const client = activeClient;
     const boardSize = activeBoardSize;
 
-    const bingoPackage = client.package.findPackage("APBingo");
-
-    // Get Bingo Datapackage
-    if (!bingoPackage) {
-        console.error("APBingo data package not found!");
-        return;
-    }
-
-    const checked = new Set([
-        ...client.room.checkedLocations,
-        ...pendingMinigameChecks
-    ]);
-
-
-    // Search for the next available location in the minigame rewards and send it out
-    for (let i = 1; i <= boardSize ** 2; i++) {
-        const locationName = `Minigame Reward #${i}`;
-        const locationID = bingoPackage.locationTable[locationName];
-
-        if (locationID === undefined) {
-            console.error(`Location not found: ${locationName}`);
-            return;
-        }
-
-        if (!checked.has(locationID)) {
-            pendingMinigameChecks.add(locationID);
-            client.check(locationID);
-            useFreeHint(activeClient) // Create free hint!
-
-            return;
-        }
-    }
+    useFreeHint(activeClient) // Create free hint!
 }
-
-const MINIGAME_PREFIX = "Minigame Reward #";
 
 async function useFreeHint(client: Client): Promise<void> {
     const self = client.players.self;
@@ -140,8 +107,7 @@ async function useFreeHint(client: Client): Promise<void> {
     const checked = new Set(client.room.checkedLocations);
     const unfound = client.room.allLocations.filter(
         (id) =>
-            !checked.has(id) &&
-            !client.package.lookupLocationName(client.game, id).startsWith(MINIGAME_PREFIX)
+            !checked.has(id)
     );
 
     if (unfound.length === 0) {

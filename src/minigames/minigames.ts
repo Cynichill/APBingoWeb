@@ -68,7 +68,6 @@ function onGameLost(game: Minigame, score: number, win: boolean): void {
         }
         else{
 
-            console.log("Uh oh!")
             sendDeathLinks("Was Bad At Games")
         }
         // Reset the cookie on loss regardless, allows freeplay but only sends square if timer is over

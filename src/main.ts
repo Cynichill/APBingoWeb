@@ -89,11 +89,7 @@ setupMenu(async (host, port, slot, password) => {
 
         const updateSquaresAndCheck = () => {
 
-            const receivedSquares = new Set(client.items.received.map(item => {
-                
-                const match = item.name.match(/^Free Square: ([A-Z]+\d+)$/); // Handle 'Free Squares' (Might be removed later)
-                return match ? match[1] : item.name;
-            }));  
+            const receivedSquares = new Set(client.items.received.map(item => item.name));
 
             // Update board UI
             receivedSquares.forEach(setReceived);

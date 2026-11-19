@@ -1,5 +1,5 @@
 ﻿const LOGIN_DURATION = 30 * 24 * 60 * 60; // 30 days
-const TEMP_DURATION = 1 * 60 * 10; // 10 minutes
+const TEMP_DURATION = 1 * 10 * 60; // 10 minutes
 
 // Player information
 interface PlayerInfo {
