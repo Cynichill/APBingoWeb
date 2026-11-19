@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Archipelago Bingo</title>
-  <script type="module" crossorigin src="/APBingoWeb/assets/index-BTzz8VAh.js"></script>
-  <link rel="stylesheet" crossorigin href="/APBingoWeb/assets/index-0b7ohsHq.css">
+  <script type="module" crossorigin src="/APBingoWeb/assets/index-1rxO-Qvt.js"></script>
+  <link rel="stylesheet" crossorigin href="/APBingoWeb/assets/index-1gUHUI2T.css">
 </head>
 <body>
 
@@ -115,9 +115,16 @@
             <div id="zoomLayer">
                 <div id="bingoContainer"></div>
             </div>
-
             <section id="minigameHub" class="hidden">
+
                 <nav id="gameList" aria-label="Minigames"></nav>
+
+                <div id="currentScorePanel">
+                    <div class="stat">
+                        <span class="stat__label">Current Score</span>
+                        <span id="statCurrent" class="stat__value">-</span>
+                    </div>
+                </div>
 
                 <div id="gameArea">
                     <div id="gameStage">
@@ -127,18 +134,9 @@
                     </div>
 
                     <div id="gameStats">
-                        <div class="stat">
-                            <span class="stat__label">Goal Score</span>
-                            <span id="statGoal" class="stat__value">-</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat__label">High Score</span>
-                            <span id="statHigh" class="stat__value">-</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat__label">Dev Score</span>
-                            <span id="statDev" class="stat__value">-</span>
-                        </div>
+                        <div class="stat"><span class="stat__label">Goal Score</span><span id="statGoal" class="stat__value">-</span></div>
+                        <div class="stat"><span class="stat__label">High Score</span><span id="statHigh" class="stat__value">-</span></div>
+                        <div class="stat"><span class="stat__label">Dev Score</span><span id="statDev" class="stat__value">-</span></div>
                     </div>
                 </div>
             </section>

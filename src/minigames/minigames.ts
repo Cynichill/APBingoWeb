@@ -20,6 +20,10 @@ let frameEl: HTMLElement;
 let activeGame: Minigame | null = null;
 let stopGame: (() => void) | void = undefined;
 
+let currentTimer = 0;
+let clockInterval = 0;
+let clockStart = 0;
+
 
 function formatScore(game: Minigame, value: number): string {
     if (game.lowerIsBetter && value === 0) return "-";   // 0 = no time set yet
@@ -41,42 +45,61 @@ function isNewHighScore(game: Minigame, score: number): boolean {
     }
     return score > game.highScore;
 }
+
 function meetsGoal(game: Minigame, score: number): boolean {
     return game.lowerIsBetter ? score <= game.goal : score >= game.goal;
 }
+
 function updateStats(game: Minigame | null): void {
+    document.getElementById("statCurrent")!.textContent = "-";
     document.getElementById("statGoal")!.textContent = game ? formatScore(game, game.goal) : "-";
     document.getElementById("statHigh")!.textContent = game ? formatScore(game, game.highScore) : "-";
     document.getElementById("statDev")!.textContent = game ? formatScore(game, game.devScore) : "-";
 }
+
+function showCurrent(game: Minigame, value: number): void {
+    document.getElementById("statCurrent")!.textContent = formatScore(game, value);
+}
+
+function startClock(game: Minigame): void {
+    clearInterval(clockInterval);
+    clockStart = performance.now();
+    clockInterval = window.setInterval(() => showCurrent(game, performance.now() - clockStart), 50);
+}
+
 function onGameLost(game: Minigame, score: number, win: boolean): void {
+    // Stop the visual clock for timer games
+    if (game.scoreType === "time") {
+        clearInterval(clockInterval);
+        showCurrent(game, win ? score : performance.now() - clockStart);
+    }
 
     // Check high score based on score format
-
-    if(win){
+    if (win) {
         if (isNewHighScore(game, score)) {
-        game.highScore = score;
-        updateStats(game);
+            game.highScore = score;
+            updateStats(game);
         }
     }
 
     if (!hasCurrentTempCookie()) {
         if (meetsGoal(game, score) && win) {
-      
             // If the cookie doesn't exist, send minigame reward
             sendNextMinigameReward()
         }
-        else{
-
+        else {
             sendDeathLinks("Was Bad At Games")
         }
         // Reset the cookie on loss regardless, allows freeplay but only sends square if timer is over
         resetCurrentTempCookie();
     }
-
 }
 
 function selectGame(game: Minigame): void {
+
+    clearInterval(clockInterval);
+    clearInterval(currentTimer);
+
     if (typeof stopGame === "function") stopGame();
 
     frameEl.replaceChildren();
@@ -89,7 +112,18 @@ function selectGame(game: Minigame): void {
 
     if (game.start) {
         activeGame = game;
-        stopGame = game.start(frameEl, (score, win) => onGameLost(game, score, win));
+        stopGame = game.start(
+            frameEl,
+            (score, win) => onGameLost(game, score, win),
+            undefined, // onGoalReached
+            () => startClock(game),
+            (value) => showCurrent(game, value),
+        );
+
+        currentTimer = window.setInterval(() => {
+            document.getElementById("statCurrent")!.textContent =
+            game.getCurrent ? formatScore(game, game.getCurrent()) : "-";
+        }, 50);
     } else {
         activeGame = null;
         const msg = document.createElement("span");
@@ -121,12 +155,9 @@ function toggleHub(): void {
     hub.classList.toggle("hidden", !showHub);
     zoomLayer.classList.toggle("hidden", showHub);
 }
+
 function handleDeathLink(): void {
-    if (activeGame?.kill) {
-        activeGame.kill();
-    } else {
-        resetCurrentTempCookie();
-    }
+    activeGame?.kill?.();
 }
 
 export function initMinigameHub(): void {

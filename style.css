@@ -772,6 +772,7 @@ body {
     gap: 16px;
     padding: 16px;
     height: calc(100vh - 65px);
+    position: relative;
 }
 
     #minigameHub.hidden {
@@ -872,6 +873,17 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
+}
+
+#currentScorePanel {
+    position: absolute;
+    left: 300px;
+    top: 16px;
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    pointer-events: none;
 }
 
 .stat {

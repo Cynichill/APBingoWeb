@@ -223,20 +223,12 @@ export const snakeGame: Minigame = {
             });
 
 
-            // Text 
+            // Text
             ctx.textBaseline = "middle";
 
-
-            // Draw Score
-            if (state === "playing") {
-                ctx.textAlign = "left";
-                ctx.fillStyle = color("--text-secondary");
-                ctx.font = "600 20px Inter, system-ui, sans-serif";
-                ctx.fillText(String(score), 12, 22);
-            } else {
+            if (state !== "playing") {
                 ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
                 ctx.fillRect(0, 0, SIZE, SIZE);
-
 
                 // Game over and Start text
                 if (state === "ready") {
@@ -249,6 +241,7 @@ export const snakeGame: Minigame = {
             }
         }
 
+
         window.addEventListener("keydown", onKeyDown);
         const interval = window.setInterval(tick, TICK_MS);
 
@@ -256,8 +249,11 @@ export const snakeGame: Minigame = {
 
         snakeGame.kill = () => {if (state === "playing") die();};
 
+        snakeGame.getCurrent = () => score;
+
         return () => {
             snakeGame.kill = undefined;
+            snakeGame.getCurrent = undefined;
             window.removeEventListener("keydown", onKeyDown);
             clearInterval(interval);
         };

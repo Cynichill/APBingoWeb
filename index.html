@@ -114,9 +114,16 @@
             <div id="zoomLayer">
                 <div id="bingoContainer"></div>
             </div>
-
             <section id="minigameHub" class="hidden">
+
                 <nav id="gameList" aria-label="Minigames"></nav>
+
+                <div id="currentScorePanel">
+                    <div class="stat">
+                        <span class="stat__label">Current Score</span>
+                        <span id="statCurrent" class="stat__value">-</span>
+                    </div>
+                </div>
 
                 <div id="gameArea">
                     <div id="gameStage">
@@ -126,18 +133,9 @@
                     </div>
 
                     <div id="gameStats">
-                        <div class="stat">
-                            <span class="stat__label">Goal Score</span>
-                            <span id="statGoal" class="stat__value">-</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat__label">High Score</span>
-                            <span id="statHigh" class="stat__value">-</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat__label">Dev Score</span>
-                            <span id="statDev" class="stat__value">-</span>
-                        </div>
+                        <div class="stat"><span class="stat__label">Goal Score</span><span id="statGoal" class="stat__value">-</span></div>
+                        <div class="stat"><span class="stat__label">High Score</span><span id="statHigh" class="stat__value">-</span></div>
+                        <div class="stat"><span class="stat__label">Dev Score</span><span id="statDev" class="stat__value">-</span></div>
                     </div>
                 </div>
             </section>

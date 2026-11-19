@@ -7,9 +7,15 @@
     scoreType?: "number" | "time";
     lowerIsBetter?: boolean;
     kill?: () => void;
+    getCurrent?: () => number;
     start?: (
         container: HTMLElement,
         onGameLost?: (score: number, win: boolean) => void,
-        onGoalReached?: () => void
+        onGoalReached?: () => void,
+        onStart?: () => void,
+        onScore?: (value: number) => void
     ) => (() => void) | void;
 }
+
+
+

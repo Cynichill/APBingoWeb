@@ -32,6 +32,8 @@ function playSound(sound: HTMLAudioElement): void {
 const GRID = 9; // Board size (9x9)
 const MINES = 10; // Mine count
 
+let finalTime = 0;
+
 export const minesweeperGame: Minigame = {
     id: "minesweeper",
     name: "Minesweeper",
@@ -107,6 +109,7 @@ export const minesweeperGame: Minigame = {
 
             startedAt = 0;
             busy = false;
+            finalTime = 0;
             state = "ready";
             playSound(startSound);
         }
@@ -183,6 +186,8 @@ export const minesweeperGame: Minigame = {
                 cell.appendChild(img);
             });
 
+            finalTime = time;
+
             playSound(time <= minesweeperGame.devScore ? devScoreSound : scoreSound);
 
             onGameLost?.(time, true);
@@ -213,6 +218,7 @@ export const minesweeperGame: Minigame = {
         }
 
         function loseGame(hit?: HTMLButtonElement): void {
+            finalTime = Math.round(performance.now() - startedAt);
             state = "over";
             hit?.classList.add("exploded");
             revealMines();
@@ -283,8 +289,11 @@ export const minesweeperGame: Minigame = {
 
         minesweeperGame.kill = () => {if (state === "playing") loseGame();};
 
+        minesweeperGame.getCurrent = () => state === "playing" ? Math.round(performance.now() - startedAt) : finalTime;
+
         return () => {
             minesweeperGame.kill = undefined;
+            minesweeperGame.getCurrent = undefined;
             grid.removeEventListener("click", onClick);
             grid.removeEventListener("contextmenu", onContextMenu);
             grid.remove();
