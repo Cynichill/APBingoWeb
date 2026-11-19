@@ -246,6 +246,57 @@
 }
 
 /* ==============================
+   Theme: Forest
+============================== */
+[data-theme="forest"] {
+    /* === Base === */
+    --bg-primary:          #0d100c;
+    --bg-secondary:        #131912;
+    --bg-elevated:         #1e231c;
+    --border-subtle:       #283025;
+    --border-accent:       #364b30;
+    --text-primary:        #e8ede4;
+    --text-secondary:      #98a890;
+
+    /* === Accent === */
+    --accent:              #138E2A;
+    --accent-hover:        #43AF38;
+    --accent-glow:         rgba(19, 142, 42, 0.15);
+
+    /* === Header / Chrome === */
+    --header-bg:           #172214;
+    --counter-bg:          rgb(19 142 42 / 15%);
+    --counter-border:      rgb(19 142 42 / 30%);
+
+    /* === Panel === */
+    --panel-bg:            rgba(16, 23, 15, 0.92);
+
+    /* === Squares === */
+    --square-bg:           #172315;
+    --square-header-bg:    rgb(76 211 46 / 20%);
+    --square-header-text:  #d4ddcc;
+    --square-body-text:    #c0ccb5;
+
+    /* === Received / Completed === */
+    --received-bg:         #2f443a;
+    --received-header-bg:  #567a62;
+
+    /* === Fog of War === */
+    --fog-bg:              rgba(10, 15, 8, 0.6);
+    --fog-border:          rgba(38, 50, 32, 0.4);
+    --fog-header-bg:       rgba(255, 255, 255, 0.03);
+    --fog-header-text:     rgba(152, 168, 144, 0.35);
+
+    /* === Starred === */
+    --starred-border:      #c4c44a;
+    --starred-glow:        rgba(196, 196, 74, 0.35);
+
+    /* === Search Highlight === */
+    --search-color:        #3fd820;
+    --search-glow:         rgba(63, 216, 32, 0.4);
+}
+
+/* ==============================
    Global Reset & Base Styles
 ============================== */
 *, *::before, *::after {
