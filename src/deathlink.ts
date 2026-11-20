@@ -36,5 +36,5 @@ export function setDeathLinkEnabled(cl: Client, mini: boolean | null | undefined
 }
 export function sendDeathLinks(cause?: string): void {
     if (!enabled || !client || receivingDeath) return;
-    client.deathLink.sendDeathLink(client.players.self.name, cause);
+    client.deathLink.sendDeathLink(client.players.self.name, client.players.self.name + " " + cause);
 }
