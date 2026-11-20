@@ -88,7 +88,7 @@ function onGameLost(game: Minigame, score: number, win: boolean): void {
             sendNextMinigameReward()
         }
         else {
-            sendDeathLinks("Was Bad At Games")
+            sendDeathLinks("Was Bad At " + game.name)
         }
         // Reset the cookie on loss regardless, allows freeplay but only sends square if timer is over
         resetCurrentTempCookie();
